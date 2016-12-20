@@ -1,0 +1,255 @@
+<!--
+The MIT License (MIT)
+Copyright (c) 2014 Leap Motion Inc
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+//-->
+
+<html>
+<head>
+    <title>Pinch Strength Position Demo</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.js"></script>
+    <script src="//js.leapmotion.com/leap-0.6.2.js"></script>
+    <script src="//js.leapmotion.com/leap-plugins-0.1.6.1.js"></script>
+    <script src="//js.leapmotion.com/leap.rigged-hand-0.1.4.min.js"></script>
+    <script type="text/javascript" src="lib/jquery-3.1.1.min.js"></script>
+    <script src='https://cdn.rawgit.com/admsev/jquery-play-sound/master/jquery.playSound.js'></script>
+
+
+    <style class="codepen">
+        body {
+            font-family: 'Courier New', Helvetica, Arial, 'Lucida Grande', sans-serif;
+            margin: 0;
+        }
+
+        #output {
+            font-size: 100px;
+            color: #666;
+            text-align: left;
+            position: fixed;
+            bottom: 18px;
+            left: 18px;
+        }
+
+        #progress {
+            background: #005d98;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 16px;
+            width: 0%;
+        }
+
+        #bg {
+            background-color: #000;
+            width: 100%;
+            height: 100%;
+        }
+
+        img#connect-leap {
+            /* this can be removed with leapjs-plugins 0.1.4.1 */
+            max-width: 100%;
+        }
+
+        #rec {
+            background-color: #005d98;
+            height: 500px;
+            width: 10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<div id=output></div>
+<div id=progress></div>
+
+
+<div id=bg></div>
+
+
+
+</body>
+
+<script type="text/javascript">
+    /********************************************************
+     * This is the actual example part where we call pinchStrength
+     *****************************************************/
+
+    var light = false;
+    var pressed = false;
+    var soundIn = true;
+    var soundOut = false;
+    var HandIn = false;
+
+
+    var output = document.getElementById('output');
+    var progress = document.getElementById('progress');
+    var background = document.getElementById("bg");
+
+    var posthumb;
+    var recwidth = $('#rec').width();
+
+    var controllerTest = Leap.loop(function(frame){
+
+//        console.log(HandIn);
+
+        if (HandIn && soundIn) {
+            $.playSound("data/txting_press_b");
+            soundIn = false;
+        }
+        else if (!HandIn && !soundIn){
+            $.playSound("data/txting_press_a");
+            soundIn = true;
+        }
+
+        HandIn = false;
+
+
+    });
+
+
+    // Sobald die Hand über der Leap ist, wird die Funktion ausgeführtund wiederholt
+    Leap.loop({background: true}, {
+
+        hand: function (hand) {
+//            console.log("handincheck" + HandIn);
+            HandIn = true;
+            output.innerHTML = hand.pinchStrength.toPrecision(2);
+            //progress.style.width = hand.pinchStrength * 100 + '%';
+            posthumb = hand.fingers[0].dipPosition[0];
+
+            fuck();
+
+
+
+            //TAP
+            if (hand.pinchStrength <= 0.95 && pressed) {
+                pressed = false;
+                background.style.opacity = 0;
+            }
+
+
+            if (hand.pinchStrength > 0.95 && !pressed) {
+//                toggle();
+                pressed = true;
+                background.style.opacity = 100;
+
+            }
+
+//            function toggle() {
+//
+//                if (light) {
+//                    background.style.opacity = 0;
+//                    light = false;
+//                }
+//                else {
+//                    background.style.opacity = 100;
+//
+//                    light = true;
+//                    //window.alert("fuck");
+//                }
+//            }
+
+        }
+    });
+    function fuck() {
+        if (pressed == true){
+            var color = Math.round(map(posthumb, -200, 300, 20,200) );
+
+            var r = 70;
+            var g = color;
+            var b = 185;
+
+            background.style.backgroundColor = rgbToHex(r,g,b);
+//            background.style.opacity = posthumb.map(-50, 300, 0, 250);
+//            $('#rec').width(Math.round(posthumb)*10);
+        }
+    }
+
+
+
+    function rgbToHex(r, g, b) {
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function map(value, in_min, in_max, out_min, out_max) {
+        return (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+
+
+
+    //
+    //	/*********************************************************
+    //	* End of the actual example
+    //	****************************************************/
+    //
+    //
+    //	/*********************************************************
+    //	* The rest of the code is here for visualizing the example. Feel
+    //	* free to remove it to experiment with the API value only
+    //	****************************************************/
+    //
+    //	// Adds the rigged hand and playback plugins
+    //	// to a given controller, providing a cool demo.
+    //	visualizeHand = function(controller){
+    //	  // The leap-plugin file included above gives us a number of plugins out of the box
+    //	  // To use a plugins, we call `.use` on the controller with options for the plugin.
+    //	  // See js.leapmotion.com/plugins for more info
+    //
+    //	  controller.use('playback', {
+    //		  // This is a compressed JSON file of preprecorded frame data
+    //		  recording: 'pinch-bones-3-57fps.json.lz',
+    //		  // How long, in ms, between repeating the recording.
+    //		  timeBetweenLoops: 1000,
+    //		  pauseOnHand: true
+    //	  }).on('riggedHand.meshAdded', function(handMesh, leapHand){
+    //		  handMesh.material.opacity = 1;
+    //	  });
+    //
+    //	  var overlay = controller.plugins.playback.player.overlay;
+    //	  overlay.style.right = 0;
+    //	  overlay.style.left = 'auto';
+    //	  overlay.style.top = 'auto';
+    //	  overlay.style.padding = 0;
+    //	  overlay.style.bottom = '13px';
+    //	  overlay.style.width = '180px';
+    //
+    //
+    //	  controller.use('riggedHand', {
+    //		scale: 1.3,
+    //		boneColors: function (boneMesh, leapHand){
+    //		  if ((boneMesh.name.indexOf('Finger_') == 0) ) {
+    //        if ((boneMesh.name.indexOf('Finger_0') == 0) || (boneMesh.name.indexOf('Finger_1') == 0)) {
+    //          return {
+    //            hue: 0.564,
+    //            saturation: leapHand.pinchStrength,
+    //            lightness: 0.5
+    //          }
+    //        }
+    //		  }
+    //		}
+    //	  });
+    //
+    //    var camera = controller.plugins.riggedHand.camera;
+    //    camera.position.set(-8,8,20);
+    //    camera.lookAt(new THREE.Vector3(0,0,0));
+    //	};
+    //	visualizeHand(Leap.loopController);
+</script>
+</html>
