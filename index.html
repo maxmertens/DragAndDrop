@@ -44,17 +44,99 @@ THE SOFTWARE.
             left: 18px;
         }
 
-        #progress {
-            background: #005d98;
+        #volume {
+            left: 43%;
+            top: 62%;
+            width: 254px;
+            height: 254px;
+            background-color: #333;
+            opacity: 0;
+            border-radius: 26px;
             position: fixed;
-            bottom: 0;
+        }
+
+        .progressbar {
+            background: #555;
+            position: absolute;
+            bottom: 10%;
+            width: 80%;
+            left: 10%;
+            height: 10px;
+        }
+
+        .volumebit {
+            background: #fff;
+            position: absolute;
+            height: 9px;
+            width: 5.5%;
+        }
+
+        #bit1 {
             left: 0;
-            height: 16px;
-            width: 0%;
+        }
+
+        #bit2 {
+            left: 6.25%;
+        }
+
+        #bit3 {
+            left: 12.5%;
+        }
+
+        #bit4 {
+            left: 18.75%;
+        }
+
+        #bit5 {
+            left: 25%;
+        }
+
+        #bit6 {
+            left: 31.25%;
+        }
+
+        #bit7 {
+            left: 37.5%;
+        }
+
+        #bit8 {
+            left: 43.75%;
+        }
+
+        #bit9 {
+            left: 50%;
+        }
+
+        #bit10 {
+            left: 56.25%;
+        }
+
+        #bit11 {
+            left: 62.5%;
+        }
+
+        #bit12 {
+            left: 68.75%;
+        }
+
+        #bit13 {
+            left: 75%;
+        }
+
+        #bit14 {
+            left: 81.25%;
+        }
+
+        #bit15 {
+            left: 87.5%;
+        }
+
+        #bit16 {
+            left: 93.75%;
         }
 
         #bg {
-            background-color: #000;
+            background-color: #C0D6E4;
             width: 100%;
             height: 100%;
         }
@@ -74,15 +156,36 @@ THE SOFTWARE.
 
 </head>
 
-<body>
-<div id=output></div>
-<div id=progress></div>
+<!--<body>-->
 <div id=bg></div>
+<div id=output></div>
+
+
+<div id="volume">
+    <div class="progressbar">
+        <div class="volumebit" id="bit1"></div>
+        <div class="volumebit" id="bit2"></div>
+        <div class="volumebit" id="bit3"></div>
+        <div class="volumebit" id="bit4"></div>
+        <div class="volumebit" id="bit5"></div>
+        <div class="volumebit" id="bit6"></div>
+        <div class="volumebit" id="bit7"></div>
+        <div class="volumebit" id="bit8"></div>
+        <div class="volumebit" id="bit9"></div>
+        <div class="volumebit" id="bit10"></div>
+        <div class="volumebit" id="bit11"></div>
+        <div class="volumebit" id="bit12"></div>
+        <div class="volumebit" id="bit13"></div>
+        <div class="volumebit" id="bit14"></div>
+        <div class="volumebit" id="bit15"></div>
+        <div class="volumebit" id="bit16"></div>
+
+    </div>
+</div>
 
 <audio autoplay loop id="sound">
     <source src="data/06_Californication.mp3" type="audio/mpeg">
 </audio>
-
 
 
 </body>
@@ -100,25 +203,41 @@ THE SOFTWARE.
     var soundOut = false;
     var HandIn = false;
 
-
     var output = document.getElementById('output');
     var progress = document.getElementById('progress');
     var background = document.getElementById("bg");
     var sound = document.getElementById("sound");
+    var volume = document.getElementById("volume");
 
-
-
+    var bit1 = document.getElementById("bit1");
+    var bit2 = document.getElementById("bit2");
+    var bit3 = document.getElementById("bit3");
+    var bit4 = document.getElementById("bit4");
+    var bit5 = document.getElementById("bit5");
+    var bit6 = document.getElementById("bit6");
+    var bit7 = document.getElementById("bit7");
+    var bit8 = document.getElementById("bit8");
+    var bit9 = document.getElementById("bit9");
+    var bit10 = document.getElementById("bit10");
+    var bit11 = document.getElementById("bit11");
+    var bit12 = document.getElementById("bit12");
+    var bit13 = document.getElementById("bit13");
+    var bit14 = document.getElementById("bit14");
+    var bit15 = document.getElementById("bit15");
+    var bit16 = document.getElementById("bit16");
 
     var posthumb;
     var recwidth = $('#rec').width();
 
-    var controllerTest = Leap.loop(function(frame){
+
+    // Funktion die dauerhaft ausgeführt wird
+    var controllerTest = Leap.loop(function (frame) {
 
         if (HandIn && soundIn) {
             $.playSound("data/txting_press_b");
             soundIn = false;
         }
-        else if (!HandIn && !soundIn){
+        else if (!HandIn && !soundIn) {
             $.playSound("data/txting_press_a");
             soundIn = true;
         }
@@ -126,31 +245,139 @@ THE SOFTWARE.
     });
 
 
-    // Sobald die Hand über der Leap ist, wird die Funktion ausgeführtund wiederholt
+    // Sobald die Hand über der Leap ist, wird die Funktion ausgeführt und wiederholt
     Leap.loop({background: true}, {
 
         hand: function (hand) {
             //console.log("handincheck" + HandIn);
             HandIn = true;
             output.innerHTML = hand.pinchStrength.toPrecision(2);
-            //progress.style.width = hand.pinchStrength * 100 + '%';
             posthumb = hand.fingers[0].dipPosition[0];
+
+            // Tap Funktion ///////////////////////////////////////
+            if (hand.pinchStrength <= 0.80 && pressed) {
+                pressed = false;
+                background.style.opacity = 1;
+            }
+
+            if (hand.pinchStrength > 0.80 && !pressed) {
+                // toggle();
+                pressed = true;
+                background.style.opacity = 1;
+            }
+
+            // Show Volume ///////////////////////////////////////
+            if (hand.pinchStrength > 0.80) {
+                volume.style.opacity = 0.4;
+            }
+            if (hand.pinchStrength < 0.80) {
+                volume.style.opacity = 0;
+            }
+
+            var range = Math.round(map(posthumb, -100, 120, 0, 100));
+
+            if (range < 0) {
+                bit1.style.opacity = 0;
+            } else {
+                bit1.style.opacity = 1;
+            }
+
+            if (range < 6.25) {
+                bit2.style.opacity = 0;
+            } else {
+                bit2.style.opacity = 1;
+            }
+
+            if (range < 12.5) {
+                bit3.style.opacity = 0;
+            } else {
+                bit3.style.opacity = 1;
+            }
+
+            if (range < 18.75) {
+                bit4.style.opacity = 0;
+            } else {
+                bit4.style.opacity = 1;
+            }
+
+            if (range < 25) {
+                bit5.style.opacity = 0;
+            } else {
+                bit5.style.opacity = 1;
+            }
+
+            if (range < 31.25) {
+                bit6.style.opacity = 0;
+            } else {
+                bit6.style.opacity = 1;
+            }
+
+            if (range < 37.5) {
+                bit7.style.opacity = 0;
+            } else {
+                bit7.style.opacity = 1;
+            }
+
+            if (range < 43.75) {
+                bit8.style.opacity = 0;
+            } else {
+                bit8.style.opacity = 1;
+            }
+
+            if (range < 50) {
+                bit9.style.opacity = 0;
+            } else {
+                bit9.style.opacity = 1;
+            }
+
+            if (range < 56.25) {
+                bit10.style.opacity = 0;
+            } else {
+                bit10.style.opacity = 1;
+            }
+
+            if (range < 62.5) {
+                bit11.style.opacity = 0;
+            } else {
+                bit11.style.opacity = 1;
+            }
+
+            if (range < 68.75) {
+                bit12.style.opacity = 0;
+            } else {
+                bit12.style.opacity = 1;
+            }
+
+            if (range < 75) {
+                bit13.style.opacity = 0;
+            } else {
+                bit13.style.opacity = 1;
+            }
+
+            if (range < 81.25) {
+                bit14.style.opacity = 0;
+            } else {
+                bit14.style.opacity = 1;
+            }
+
+            if (range < 87.5) {
+                bit15.style.opacity = 0;
+            } else {
+                bit15.style.opacity = 1;
+            }
+
+            if (range < 93.75) {
+                bit16.style.opacity = 0;
+            } else {
+                bit16.style.opacity = 1;
+            }
 
             fuck();
 
 
+            // Progress Bar
+//            progress.style.height = hand.pinchStrength * 100 + '%';
 
-            //TAP Funktion
-            if (hand.pinchStrength <= 0.80 && pressed) {
-                pressed = false;
-                background.style.opacity = 0;
-            }
-
-            if (hand.pinchStrength > 0.80 && !pressed) {
-//                toggle();
-                pressed = true;
-                background.style.opacity = 100;
-            }
 
 //            function toggle() {
 //
@@ -168,15 +395,17 @@ THE SOFTWARE.
 
         }
     });
+
+
     function fuck() {
-        if (pressed == true){
-            var color = Math.round(map(posthumb, -200, 200, 0, 100) );
+        if (pressed == true) {
+            var color = Math.round(map(posthumb, -200, 200, 0, 100));
 
             var r = 70;
             var g = color;
             var b = 80;
 
-            background.style.backgroundColor = rgbToHex(r,g,b);
+//            background.style.backgroundColor = rgbToHex(r,g,b);
 
             //set Sound volume
             sound.volume = color/100;
@@ -188,8 +417,6 @@ THE SOFTWARE.
     }
 
 
-
-
     function rgbToHex(r, g, b) {
         return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
@@ -197,7 +424,6 @@ THE SOFTWARE.
     function map(value, in_min, in_max, out_min, out_max) {
         return (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
-
 
 
 </script>
