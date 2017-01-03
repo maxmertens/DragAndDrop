@@ -56,11 +56,13 @@ var controllerTest = Leap.loop(function (frame) {
         $.playSound("data/txting_press_b");
         soundIn = false;
         circle.animate(1);
+        $("#display").css("opacity", "1");
     }
     else if (!HandIn && !soundIn) {
         $.playSound("data/txting_press_a");
         soundIn = true;
         circle.animate(0);
+        $("#display").css("opacity", "0.1");
     }
     HandIn = false;
 });
@@ -75,7 +77,7 @@ Leap.loop({background: true}, {
         output.innerHTML = hand.pinchStrength.toPrecision(2);
 
         display.innerHTML = hand.pinchStrength.toPrecision(2);
-        
+
         posthumb = hand.fingers[0].dipPosition[0];
 
         // Tap Funktion ///////////////////////////////////////
@@ -197,26 +199,7 @@ Leap.loop({background: true}, {
         }
 
         fuck();
-
-
-        // Progress Bar
-//            progress.style.height = hand.pinchStrength * 100 + '%';
-
-
-//            function toggle() {
-//
-//                if (light) {
-//                    background.style.opacity = 0;
-//                    light = false;
-//                }
-//                else {
-//                    background.style.opacity = 100;
-//
-//                    light = true;
-//                    //window.alert("fuck");
-//                }
-//            }
-
+        
     }
 });
 
