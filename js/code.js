@@ -10,6 +10,8 @@ var soundOut = false;
 var HandIn = false;
 
 var output = document.getElementById('output');
+var display = document.getElementById('display');
+
 var progress = document.getElementById('progress');
 var background = document.getElementById("bg");
 var sound = document.getElementById("sound");
@@ -38,8 +40,9 @@ var recwidth = $('#rec').width();
 
 // Variable für den Progress Bar Kreis ///////////
 var circle = new ProgressBar.Circle('#progress', {
-    color: '#FCB03C',
-    duration: 500,
+    strokeWidth: 2,
+    color: '#86C3B8',
+    duration: 400,
     easing: 'easeInOut'
 });
 
@@ -70,6 +73,9 @@ Leap.loop({background: true}, {
         //console.log("handincheck" + HandIn);
         HandIn = true;
         output.innerHTML = hand.pinchStrength.toPrecision(2);
+
+        display.innerHTML = hand.pinchStrength.toPrecision(2);
+        
         posthumb = hand.fingers[0].dipPosition[0];
 
         // Tap Funktion ///////////////////////////////////////

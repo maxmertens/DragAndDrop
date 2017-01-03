@@ -1,5 +1,4 @@
 body {
-    font-family: 'Courier New', Helvetica, Arial, 'Lucida Grande', sans-serif;
     margin: 0;
 }
 
@@ -11,7 +10,9 @@ body {
 }
 
 #output {
-    font-size: 100px;
+    font-family: "DIN Pro";
+    font-weight: 100;
+    font-size: 30px;
     color: #666;
     text-align: left;
     position: fixed;
@@ -111,7 +112,7 @@ body {
 }
 
 #bg {
-    background-color: #C0D6E4;
+    background-color: white;
     width: 100%;
     height: 100%;
 }
@@ -123,18 +124,35 @@ img#connect-leap {
 
 #rec {
     background-color: #005d98;
-    height: 500px;
+    height: 480px;
     width: 10px;
 }
 
 .progress {
-    height: 300px;
+    height: 430px;
     position: absolute;
-    top: 100px;
-    left: 100px;
+    top: 220px;
+    left: 570px;
 }
 
 .progress > svg {
     height: 100%;
     display: block;
+}
+
+.device {
+    position: absolute;
+    top: 100px;
+    left: 300px;
+}
+
+#display {
+    font-family: "DIN Pro";
+    font-weight: 100;
+    font-size: 100px;
+    color: white;
+    text-align: left;
+    position: fixed;
+    top: 364px;
+    left: 700px;
 }
