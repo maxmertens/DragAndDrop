@@ -4,6 +4,13 @@ body {
     margin: 0;
 }
 
+.icon {
+
+    width: 50%;
+    left: 20%;
+    top: 20%;
+}
+
 #output {
     font-size: 100px;
     color: #666;
