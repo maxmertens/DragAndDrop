@@ -51,7 +51,6 @@ var circle = new ProgressBar.Circle('#progress', {
 // Funktion die dauerhaft ausgeführt wird
 var controllerTest = Leap.loop(function (frame) {
 
-
     if (HandIn && soundIn) {
         $.playSound("data/txting_press_b");
         soundIn = false;
